@@ -1,5 +1,2 @@
-[database]
-name = 
-host = 
-user = 
-password = 
+[default]
+directory =
