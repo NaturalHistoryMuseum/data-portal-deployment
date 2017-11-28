@@ -43,7 +43,7 @@ def main(repo_name):
                 else:
                     click.secho('There are no releases available for {} - skipping'.format(name), fg='red')
 
-    click.secho('Repositories updated - please touch WSGI to compile changes:\n\n\ttouch apache2.wsgi\n', fg='green')
+    click.secho('Repositories updated - please restart WSGI to release changes:\n\n\ttouch /etc/ckan/default/apache.wsgi\n', fg='green')
 
 if __name__ == '__main__':
     main()
