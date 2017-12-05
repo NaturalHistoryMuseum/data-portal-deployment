@@ -11,39 +11,75 @@ from git.exc import InvalidGitRepositoryError
 
 from deployment.repository import Repository
 from deployment.exceptions import DeploymentException
+from deployment.deploy import Deploy
 
-@click.command()
-@click.option('--repo_name', '-n')
-def main(repo_name):
 
-    config_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    config = ConfigParser.ConfigParser()
-    config.read(os.path.join(config_dir, 'default.cfg'))
-    directory = config.get('default', 'directory')
 
-    for name in os.listdir(directory):
-        # If we only want to update one repo, skip if it doesn't match repo_name
-        if repo_name and name != repo_name:
-            continue
-        path = os.path.join(directory, name)
-        if os.path.isdir(path):
-            try:
-                repo = Repository(path)
-            except InvalidGitRepositoryError:
-                continue
+#
+#
+# def update_repo_to_latest_release(repo):
+#     '''
+#     Update a repository to the latest release
+#     @param repo:
+#     @type Repository:
+#     @return:
+#     @rtype:
+#     '''
+#
+#
+# def update_repo_to_master(repo):
+#     '''
+#     Update a repository from master branch
+#     @param repo:
+#     @type Repository:
+#     @return:
+#     @rtype:
+#     '''
+#
 
-            # Make sure this is an NHM Repo and has a latest release
-            if repo.is_nhm:
-                if repo.latest_release:
-                    if repo.current_release == repo.latest_release:
-                        click.secho('{} is already at the latest release - {}'.format(name, repo.latest_release), fg='green')
-                    else:
-                        repo.checkout(repo.latest_release)
-                        click.secho('{} updated to {}'.format(name, repo.latest_release), fg='green')
-                else:
-                    click.secho('There are no releases available for {} - skipping'.format(name), fg='red')
+#
+#
+# @click.command()
+# @click.option('--latest_release', '-r', is_flag=True)
 
-    click.secho('Repositories updated - please restart WSGI to release changes:\n\n\ttouch /etc/ckan/default/apache.wsgi\n', fg='green')
+# def main(latest_release, repo_name):
+#     for repo in list_repositories():
+#
+#         # If we only want to update one repo, skip if it doesn't match repo_name
+#         if repo_name and repo.name != repo_name:
+#             continue
+#
+#         if latest_release:
+#             update_repo_to_latest_release(repo)
+#         else:
+#             # Need to identify if the repo's been changed
+#             # ANd only restart apache if it has been
+#             update_repo_to_master(repo)
+#
+#             click.secho('Repositories updated - please restart WSGI to release changes:\n\n\ttouch /etc/ckan/default/apache.wsgi\n', fg='green')
+
+
+@click.group()
+@click.option('--name', '-n')
+@click.pass_context
+def deploy(ctx, name):
+    ctx.obj = Deploy(name)
+    click.echo('Debug mode is %s' % ('on' if name else 'off'))
+
+
+@deploy.command()
+@click.pass_context
+def master(ctx):
+    click.echo('Deploying master branch')
+    ctx.obj.master()
+
+
+@deploy.command()
+@click.pass_context
+def release(ctx):
+    click.echo('Deploying latest release')
+    ctx.obj.release()
+
 
 if __name__ == '__main__':
-    main()
+    deploy()
