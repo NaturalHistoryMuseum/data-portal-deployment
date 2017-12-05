@@ -4,7 +4,7 @@
 Created by Ben Scott on '24/11/2017'.
 """
 
-
+import os
 import re
 from git import Repo
 from git.exc import GitCommandError
@@ -14,12 +14,12 @@ class Repository(object):
     '''
     Class for managing code deployment
     '''
-
     def __init__(self, path):
         '''
         Constructor for Deployment
         '''
         self.repo = Repo(path)
+        self.name = os.path.basename(path)
 
     @property
     def releases(self):
@@ -69,6 +69,15 @@ class Repository(object):
         origin.fetch()
         tag = 'tags/{}'.format(release)
         self.repo.git.checkout(tag)
+
+    def pull(self):
+        '''
+        Pull latest from origin
+        @return:
+        @rtype:
+        '''
+        origin = self.repo.remotes.origin
+        origin.pull()
 
     @property
     def is_nhm(self):
