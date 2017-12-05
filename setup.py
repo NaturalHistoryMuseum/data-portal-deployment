@@ -15,5 +15,12 @@ setup(
     packages=[
         'deployment',
     ],
-    install_requires=[],
+    py_modules=['deployment'],
+    install_requires=[
+        'Click',
+    ],
+    entry_points='''
+        [console_scripts]
+        deploy=deployment.cli:deploy
+    ''',
 )
