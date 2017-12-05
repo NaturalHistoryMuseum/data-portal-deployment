@@ -22,7 +22,7 @@ deploy release
 
 Note: Repositories without a tagged release are not updated.
 
-To update a particular repository only:
+To update a single repository by name:
 
 ```bash
 deploy -n ckanext-nhm master
