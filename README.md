@@ -1,6 +1,4 @@
-# Data portal deployment
-
-#### Deployment tool for the Data Portal. 
+# Deployment tool for the Data Portal. 
 
 ### Overview
 
