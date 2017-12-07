@@ -1,2 +1,2 @@
 click==6.6
-PyGithub==1.35
+GitPython==2.1.7
