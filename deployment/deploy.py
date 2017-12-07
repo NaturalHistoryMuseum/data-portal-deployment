@@ -37,7 +37,7 @@ class Deploy(object):
         @raise: DeploymentException
         '''
         # Flag denoting if wsgi restart is required
-        wsgi_restart = True
+        wsgi_restart = False
         for repository in self._get_repositories():
             # Check repository isn't detached
             if repository.repo.head.is_detached:
