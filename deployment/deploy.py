@@ -39,13 +39,10 @@ class Deploy(object):
         # Flag denoting if wsgi restart is required
         wsgi_restart = False
         for repository in self._get_repositories():
-            # Check repository isn't detached
-            if repository.repo.head.is_detached:
-                raise DeploymentException('{} HEAD is detached'.format(repository.name))
 
             # Repository must be master
-            if repository.repo.head.ref.name != 'master':
-                raise DeploymentException('{} is not on master branch'.format(repository.name))
+            repository.repo.heads.master.set_tracking_branch(repository.repo.remotes.origin.refs.master)
+            repository.repo.heads.master.checkout()
 
             # Get pull status - skipping if status is Already up to date
             if repository.repo.git.pull('--stat') == 'Already up-to-date.':
@@ -104,5 +101,3 @@ class Deploy(object):
         @rtype:
         '''
         os.utime(self.wsgi, None)
-
-
