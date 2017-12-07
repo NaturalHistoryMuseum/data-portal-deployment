@@ -5,6 +5,8 @@ Created by Ben Scott on '16/11/2017'.
 """
 
 import click
+import time
+import datetime
 
 from deployment.deploy import Deploy
 
@@ -13,8 +15,9 @@ from deployment.deploy import Deploy
 @click.option('--name', '-n')
 @click.pass_context
 def deploy(ctx, name):
+    t = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+    click.echo('%s: Deployment started' % t)
     ctx.obj = Deploy(name)
-    click.echo('Debug mode is %s' % ('on' if name else 'off'))
 
 
 @deploy.command()
